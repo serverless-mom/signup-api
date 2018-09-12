@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 Transform: AWS::Serverless-2016-10-31
-Description: Stackery Serverless API Example Stack 
+Description: Stackery Serverless API Example Stack
 Resources:
   function61D00F31:
     Type: AWS::Serverless::Function
@@ -24,6 +24,8 @@ Resources:
             Path: /
             Method: GET
             RestApiId: !Ref apiFE76C470
+      Environment:
+        Variables: {}
     Metadata:
       StackeryName: getWelcomePage
   apiFE76C470:
