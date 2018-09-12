@@ -17,6 +17,8 @@ Resources:
       Tracing: Active
       Policies:
         - AWSXrayWriteOnlyAccess
+        - DynamoDBCrudPolicy:
+            TableName: !Ref tableDDCEB65A
       Events:
         apiFE76C470:
           Type: Api
@@ -25,7 +27,9 @@ Resources:
             Method: GET
             RestApiId: !Ref apiFE76C470
       Environment:
-        Variables: {}
+        Variables:
+          TABLE_NAME: !Ref tableDDCEB65A
+          TABLE_ARN: !GetAtt tableDDCEB65A.Arn
     Metadata:
       StackeryName: getWelcomePage
   apiFE76C470:
@@ -64,6 +68,21 @@ Resources:
         - AWSXrayWriteOnlyAccess
     Metadata:
       StackeryName: logErrors
+  tableDDCEB65A:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+      TableName: !Sub ${AWS::StackName}-tableDDCEB65A
 Parameters:
   StackeryStackTagName:
     Type: String
