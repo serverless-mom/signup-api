@@ -12,8 +12,8 @@ Resources:
       CodeUri: src/getWelcomePage
       Handler: index.handler
       Runtime: nodejs8.10
-      MemorySize: 3008
-      Timeout: 30
+      MemorySize: 2624
+      Timeout: 20
       Tracing: Active
       Policies:
         - AWSXrayWriteOnlyAccess
@@ -83,6 +83,8 @@ Resources:
       StreamSpecification:
         StreamViewType: NEW_AND_OLD_IMAGES
       TableName: !Sub ${AWS::StackName}-tableDDCEB65A
+    Metadata:
+      StackeryName: accounts
 Parameters:
   StackeryStackTagName:
     Type: String
