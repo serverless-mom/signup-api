@@ -19,6 +19,9 @@ exports.handler = async message => {
     TableName: process.env.TABLE_NAME
   };
   await dynamodb.putItem(params).promise();
+  params.Item.email = params.Item.email + '1'
+  await dynamodb.putItem(params).promise();
+
 
   return {
     statusCode: 302,
