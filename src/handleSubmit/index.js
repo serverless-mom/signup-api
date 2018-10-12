@@ -18,8 +18,11 @@ exports.handler = async message => {
     ReturnConsumedCapacity: 'TOTAL',
     TableName: process.env.TABLE_NAME
   };
+  console.log (params.Item)
+
   await dynamodb.putItem(params).promise();
-  params.Item.email = params.Item.email + '1'
+  console.log (params.Item)
+  params.Item['email'] = params.Item['email'] + '1'
   await dynamodb.putItem(params).promise();
 
 
