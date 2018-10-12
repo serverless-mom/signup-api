@@ -1,64 +1,40 @@
 AWSTemplateFormatVersion: 2010-09-09
 Transform: AWS::Serverless-2016-10-31
-Description: Stackery Serverless API Example Stack
 Resources:
-  function61D00F31:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Sub ${AWS::StackName}-function61D00F31
-      Description: !Sub
-        - Stackery Stack ${StackeryStackTagName} Environment ${StackeryEnvironmentTagName} Function ${ResourceName}
-        - ResourceName: getWelcomePage
-      CodeUri: src/getWelcomePage
-      Handler: index.handler
-      Runtime: nodejs8.10
-      MemorySize: 2624
-      Timeout: 20
-      Tracing: Active
-      Policies:
-        - AWSXrayWriteOnlyAccess
-        - DynamoDBCrudPolicy:
-            TableName: !Ref tableDDCEB65A
-      Events:
-        apiFE76C470:
-          Type: Api
-          Properties:
-            Path: /
-            Method: GET
-            RestApiId: !Ref apiFE76C470
-      Environment:
-        Variables:
-          TABLE_NAME: !Ref tableDDCEB65A
-          TABLE_ARN: !GetAtt tableDDCEB65A.Arn
-    Metadata:
-      StackeryName: getWelcomePage
-  apiFE76C470:
+  apiE0AB840E:
     Type: AWS::Serverless::Api
     Properties:
       Name: !Sub
         - ${ResourceName} From Stackery Stack ${StackeryStackTagName} Environment ${StackeryEnvironmentTagName}
-        - ResourceName: apiFE76C470
+        - ResourceName: apiE0AB840E
       StageName: !Ref StackeryEnvironmentAPIGatewayStageName
       DefinitionBody:
         swagger: '2.0'
         info: {}
         paths:
-          /:
+          /newsletter-form:
             get:
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
-                uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${function61D00F31.Arn}/invocations
+                uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${function80778FF8.Arn}/invocations
+              responses: {}
+          /submit:
+            post:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${functionB26DEC32.Arn}/invocations
               responses: {}
       EndpointConfiguration: REGIONAL
-  function8E6C5467:
+  function80778FF8:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub ${AWS::StackName}-function8E6C5467
+      FunctionName: !Sub ${AWS::StackName}-function80778FF8
       Description: !Sub
         - Stackery Stack ${StackeryStackTagName} Environment ${StackeryEnvironmentTagName} Function ${ResourceName}
-        - ResourceName: logErrors
-      CodeUri: src/logErrors
+        - ResourceName: getForm
+      CodeUri: src/getForm
       Handler: index.handler
       Runtime: nodejs8.10
       MemorySize: 3008
@@ -66,25 +42,62 @@ Resources:
       Tracing: Active
       Policies:
         - AWSXrayWriteOnlyAccess
+      Events:
+        apiE0AB840E:
+          Type: Api
+          Properties:
+            Path: /newsletter-form
+            Method: GET
+            RestApiId: !Ref apiE0AB840E
     Metadata:
-      StackeryName: logErrors
-  tableDDCEB65A:
+      StackeryName: getForm
+  functionB26DEC32:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-functionB26DEC32
+      Description: !Sub
+        - Stackery Stack ${StackeryStackTagName} Environment ${StackeryEnvironmentTagName} Function ${ResourceName}
+        - ResourceName: handleSubmit
+      CodeUri: src/handleSubmit
+      Handler: index.handler
+      Runtime: nodejs8.10
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Policies:
+        - AWSXrayWriteOnlyAccess
+        - DynamoDBCrudPolicy:
+            TableName: !Ref tableE1B41252
+      Events:
+        apiE0AB840E:
+          Type: Api
+          Properties:
+            Path: /submit
+            Method: POST
+            RestApiId: !Ref apiE0AB840E
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref tableE1B41252
+          TABLE_ARN: !GetAtt tableE1B41252.Arn
+    Metadata:
+      StackeryName: handleSubmit
+  tableE1B41252:
     Type: AWS::DynamoDB::Table
     Properties:
       AttributeDefinitions:
-        - AttributeName: id
+        - AttributeName: email
           AttributeType: S
       KeySchema:
-        - AttributeName: id
+        - AttributeName: email
           KeyType: HASH
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
       StreamSpecification:
         StreamViewType: NEW_AND_OLD_IMAGES
-      TableName: !Sub ${AWS::StackName}-tableDDCEB65A
+      TableName: !Sub ${AWS::StackName}-tableE1B41252
     Metadata:
-      StackeryName: accounts
+      StackeryName: SignUps
 Parameters:
   StackeryStackTagName:
     Type: String
@@ -95,6 +108,3 @@ Parameters:
   StackeryEnvironmentAPIGatewayStageName:
     Type: String
     Description: Environment name used for API Gateway Stage names (injected by Stackery at deployment time)
-Metadata:
-  StackeryErrorsTargets:
-    function8E6C5467: {}
