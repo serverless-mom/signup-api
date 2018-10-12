@@ -9,7 +9,10 @@ const formHTML = `<!DOCTYPE html>
   	<form action="submit" method="post">
   		<label>Email
   			<input name="email" type="text">
-  		</label>
+      </label>
+      <label>Name
+      <input name="name" type="text">
+    </label>
   		<input type="submit" value="Submit">
   	</form>
   

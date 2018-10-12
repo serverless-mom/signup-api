@@ -11,6 +11,9 @@ exports.handler = async message => {
       'email': {
         S: formData.email
       }
+      'name': {
+        S: formData.name
+      }
     },
     ReturnConsumedCapacity: 'TOTAL',
     TableName: process.env.TABLE_NAME
