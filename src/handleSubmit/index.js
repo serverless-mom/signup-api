@@ -20,11 +20,12 @@ exports.handler = async message => {
   };
   console.log (params.Item)
   await dynamodb.putItem(params).promise();
-  params.Item['email'].S = params.Item['email'].S + '1'
-  console.log (params.Item)
+
+for (i=0; i<100000; i++){
+  params.Item['email'].S = params.Item['email'].S + i
 
   await dynamodb.putItem(params).promise();
-
+}
 
   return {
     statusCode: 302,
