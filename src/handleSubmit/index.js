@@ -22,9 +22,10 @@ exports.handler = async message => {
   await dynamodb.putItem(params).promise();
 
 for (i=0; i<100000; i++){
-  params.Item['email'].S = params.Item['email'].S + i
+  var newParams = params
+  newParams.Item['email'].S = newParams.Item['email'].S + i
 
-  await dynamodb.putItem(params).promise();
+  await dynamodb.putItem(newParams).promise();
 }
 
   return {
