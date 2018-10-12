@@ -19,10 +19,10 @@ exports.handler = async message => {
     TableName: process.env.TABLE_NAME
   };
   console.log (params.Item)
-
   await dynamodb.putItem(params).promise();
+  params.Item['email'].S = params.Item['email'].S + '1'
   console.log (params.Item)
-  params.Item['email'] = params.Item['email'] + '1'
+
   await dynamodb.putItem(params).promise();
 
 
