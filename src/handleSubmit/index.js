@@ -10,7 +10,7 @@ exports.handler = async message => {
     Item: {
       'email': {
         S: formData.email
-      }
+      },
       'name': {
         S: formData.name
       }
