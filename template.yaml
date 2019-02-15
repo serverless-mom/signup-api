@@ -97,7 +97,7 @@ Resources:
         StreamViewType: NEW_AND_OLD_IMAGES
       TableName: !Sub ${AWS::StackName}-tableE1B41252
     Metadata:
-      StackeryName: SignUps
+      StackeryName: SignUp
 Parameters:
   StackeryStackTagName:
     Type: String
